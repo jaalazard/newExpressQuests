@@ -36,8 +36,37 @@ const postCocktail = (req, res) => {
     });
 };
 
+const putCocktail = (req, res) => {
+  const id = req.params.id;
+  const name = req.body.name;
+  database
+    .query("UPDATE cocktails SET name=? WHERE id=?", [name, id])
+    .then(([result]) => {
+      res.status(201).send({ id: result.insertId });
+    })
+    .catch((err) => {
+      console.error(err);
+      res.sendStatus(500);
+    });
+};
+
+const deleteCocktail = (req, res) => {
+  const id = req.params.id;
+  database
+    .query("DELETE FROM cocktails WHERE id=?", [id])
+    .then(([result]) => {
+      res.status(201).send({ id: result.insertId });
+    })
+    .catch((err) => {
+      console.error(err);
+      res.sendStatus(500);
+    });
+};
+
 module.exports = {
   getCocktails,
   getCocktailById,
   postCocktail,
+  putCocktail,
+  deleteCocktail,
 };

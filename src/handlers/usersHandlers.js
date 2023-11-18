@@ -45,9 +45,13 @@ const getUserById = (req, res) => {
 };
 
 const postUser = (req, res) => {
-  const { firstname, lastname, email, city, language, hashedPassword } = req.body;
+  const { firstname, lastname, email, city, language, hashedPassword } =
+    req.body;
   database
-    .query("INSERT INTO users (firstname, lastname, email, city, language, hashedPassword) VALUES (?, ?, ?, ?, ?, ?)", [firstname, lastname, email, city, language, hashedPassword])
+    .query(
+      "INSERT INTO users (firstname, lastname, email, city, language, hashedPassword) VALUES (?, ?, ?, ?, ?, ?)",
+      [firstname, lastname, email, city, language, hashedPassword]
+    )
     .then(([result]) => {
       res.status(201).send({ id: result.insertId });
     })
@@ -57,8 +61,45 @@ const postUser = (req, res) => {
     });
 };
 
+const putUser = (req, res) => {
+  const id = req.params.id;
+  const firstname = req.body.firstname;
+  const lastname = req.body.lastname;
+  const email = req.body.email;
+  const city = req.body.city;
+  const language = req.body.language;
+  const hashedPassword = req.body.hashedPassword;
+  database
+    .query(
+      "UPDATE users SET firstname=?, lastname=?, email=?, city=?, language=?, hashedPassword=? WHERE id=?",
+      [firstname, lastname, email, city, language, hashedPassword, id]
+    )
+    .then(([result]) => {
+      res.status(201).send({ id: result.insertId });
+    })
+    .catch((err) => {
+      console.error(err);
+      res.sendStatus(500);
+    });
+};
+
+const deleteUser = (req, res) => {  
+  const id = req.params.id;
+  database
+    .query("DELETE FROM users WHERE id=?", [id])
+    .then(([result]) => {
+      res.status(201).send({ id: result.insertId });
+    })
+    .catch((err) => {
+      console.error(err);
+      res.sendStatus(500);
+    });
+}
+
 module.exports = {
   getUsers,
   getUserById,
-  postUser
+  postUser,
+  putUser,
+  deleteUser,
 };

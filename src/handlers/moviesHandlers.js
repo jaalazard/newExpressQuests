@@ -36,8 +36,42 @@ const getMovies = (req, res) => {
         });
     };
 
+    const putMovie = (req, res) => {
+      const id = req.params.id;
+      const title = req.body.title;
+      const director = req.body.director;
+      const year = req.body.year;
+      const color = req.body.color;
+      const duration = req.body.duration;
+      database
+        .query("UPDATE movies SET title=?, director=?, year=?, color=?, duration=? WHERE id=?", [title, director, year, color, duration, id])
+        .then(([result]) => {
+          res.status(201).send({ id: result.insertId });
+        })
+        .catch((err) => {
+          console.error(err);
+          res.sendStatus(500);
+        });
+    };
+
+    const deleteMovie = (req, res) => {
+      const id = req.params.id;
+      database
+        .query("DELETE FROM movies WHERE id=?", [id])
+        .then(([result]) => {
+          res.status(201).send({ id: result.insertId });
+        })
+        .catch((err) => {
+          console.error(err);
+          res.sendStatus(500);
+        });
+    };
+
+
 module.exports = {
     getMovies,
     getMovieById,
     postMovie,
+    putMovie,
+    deleteMovie,
 }

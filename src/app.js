@@ -8,6 +8,7 @@ const movieHandlers = require("./handlers/moviesHandlers");
 const validateMovie = require("./middlewares/validateMovie");
 const validateUser = require("./middlewares/validateUser");
 const validateCocktail = require("./middlewares/validateCocktail");
+const { hashPassword } = require("./auth");
 
 
 const step1 = (req, res, next) => {
@@ -33,8 +34,8 @@ app.delete("/api/cocktails/:id", cocktailHandlers.deleteCocktail);
 
 app.get("/api/users", userHandlers.getUsers);
 app.get("/api/users/:id", userHandlers.getUserById);
-app.post("/api/users", validateUser, userHandlers.postUser);
-app.put("/api/users/:id", validateUser, userHandlers.putUser);
+app.post("/api/users", validateUser, hashPassword, userHandlers.postUser);
+app.put("/api/users/:id", validateUser, hashPassword, userHandlers.putUser);
 app.delete("/api/users/:id", userHandlers.deleteUser);
 
 app.get("/api/movies", movieHandlers.getMovies);
